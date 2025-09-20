@@ -74,7 +74,7 @@ const Home = ({ onGameCreated, onGameJoined }) => {
           value={gameIdInput}
           onChange={(e) => setGameIdInput(e.target.value)}
           disabled={loading}
-          className="w-full px-4 py-3 bg-white/50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400 dark:placeholder-gray-500 transition-all duration-300"
+          className="w-full px-4 py-3 bg-white/50 dark:bg-gray-700/50 dark:text-gray-300 border border-gray-200 dark:border-gray-600 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400 dark:placeholder-gray-500 transition-all duration-300"
         />
         <button 
           onClick={joinGame} 

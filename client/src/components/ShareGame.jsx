@@ -21,22 +21,6 @@ const ShareGame = ({ gameId }) => {
     }
   };
 
-  const shareLink = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: 'به بازی Tic-Tac-Toe بپیوندید',
-          text: 'به بازی من بپیوندید!',
-          url: gameLink,
-        });
-      } catch (err) {
-        console.log('Error sharing:', err);
-      }
-    } else {
-      copyLink();
-    }
-  };
-
   return (
     <div className="flex gap-2">
       <button 
@@ -49,14 +33,6 @@ const ShareGame = ({ gameId }) => {
       >
         {copied ? '✅ کپی شد' : '📋 کپی لینک'}
       </button>
-      {navigator.share && (
-        <button 
-          onClick={shareLink}
-          className="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5"
-        >
-          📤 اشتراک‌گذاری
-        </button>
-      )}
     </div>
   );
 };
