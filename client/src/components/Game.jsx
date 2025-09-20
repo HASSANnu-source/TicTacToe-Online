@@ -6,41 +6,38 @@ import { socket } from '../socket';
 const Game = ({ gameData, onLeaveGame }) => {
   const [board, setBoard] = useState(Array(9).fill(null));
   const [isYourTurn, setIsYourTurn] = useState(false);
-  const [currentTurn, setCurrentTurn] = useState(null);
   const [yourSymbol, setYourSymbol] = useState('');
   const [gameStatus, setGameStatus] = useState('waiting');
   const [winner, setWinner] = useState(null);
   const [playersCount, setPlayersCount] = useState(1);
   const [opponentLeft, setOpponentLeft] = useState(false);
   const [showShare, setShowShare] = useState(true);
+  const [winningLine, setWinningLine] = useState(null);
 
   useEffect(() => {
-    // تنظیم symbol کاربر
     if (gameData.symbol) {
       setYourSymbol(gameData.symbol);
     }
 
-    // گوش دادن به eventهای socket
     const handleMoveMade = (data) => {
       setBoard(data.board);
-      setCurrentTurn(data.turn);
       setIsYourTurn(data.turn === socket.id);
       setGameStatus(data.gameStatus);
+      setWinningLine(data.winningLine);
       
       if (data.winner) {
         setWinner(data.winner);
-        setShowShare(false); // مخفی کردن لینک اشتراک بعد از پایان بازی
+        setShowShare(false);
       }
     };
 
     const handlePlayerJoined = (data) => {
       setPlayersCount(data.players);
-      setCurrentTurn(data.turn);
       setIsYourTurn(data.turn === socket.id);
       setGameStatus('playing');
-      setShowShare(false); // مخفی کردن لینک اشتراک بعد از پیوستن بازیکن دوم
+      setShowShare(false);
+      setWinningLine(null);
       
-      // تنظیم symbol کاربر
       if (data.symbols && data.symbols[socket.id]) {
         setYourSymbol(data.symbols[socket.id]);
       }
@@ -48,18 +45,18 @@ const Game = ({ gameData, onLeaveGame }) => {
 
     const handleGameReset = (data) => {
       setBoard(data.board);
-      setCurrentTurn(data.turn);
       setIsYourTurn(data.turn === socket.id);
       setGameStatus(data.status);
       setWinner(null);
       setOpponentLeft(false);
-      setShowShare(playersCount < 2); // نمایش لینک اگر بازیکن دوم نیامده
+      setWinningLine(null);
+      setShowShare(playersCount < 2);
     };
 
     const handleOpponentLeft = () => {
       setOpponentLeft(true);
       setGameStatus('paused');
-      setShowShare(true); // نمایش مجدد لینک اگر حریف رفت
+      setShowShare(true);
     };
 
     const handleError = (data) => {
@@ -95,19 +92,36 @@ const Game = ({ gameData, onLeaveGame }) => {
   };
 
   return (
-    <div>
-      <div style={{display: "flex", alignItems: 'center', gap: '20px'}}>
-        <h2>اتاق بازی: {gameData.gameId}</h2>
-        {/* نمایش لینک اشتراک وقتی بازی در انتظار بازیکن دوم است */}
+    <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl p-8 rounded-3xl shadow-2xl border border-white/20 dark:border-gray-700/30 w-full max-w-md">
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-white">اتاق بازی</h2>
+          <p className="text-sm text-gray-600 dark:text-gray-400 font-mono">{gameData.gameId}</p>
+        </div>
         {showShare && playersCount < 2 && (
           <ShareGame gameId={gameData.gameId} />
         )}
       </div>
-      <p>نماد شما: {yourSymbol}</p>
-      <p>تعداد بازیکنان: {playersCount}/2</p>
       
-      <div>
-        <p>{getStatusMessage()}</p>
+      <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-700 dark:to-slate-700 rounded-2xl">
+        <div className="flex justify-between items-center">
+          <span className="text-gray-600 dark:text-gray-300">نماد شما:</span>
+          <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">{yourSymbol}</span>
+        </div>
+        <div className="flex justify-between items-center mt-2">
+          <span className="text-gray-600 dark:text-gray-300">بازیکنان:</span>
+          <span className="text-lg font-semibold text-green-600 dark:text-green-400">{playersCount}/2</span>
+        </div>
+      </div>
+      
+      <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-2xl text-center">
+        <p className={`text-lg font-semibold ${
+          isYourTurn ? 'text-green-600 animate-pulse' : 
+          winner ? 'text-red-600' : 
+          'text-gray-700 dark:text-gray-300'
+        }`}>
+          {getStatusMessage()}
+        </p>
       </div>
 
       <Board 
@@ -121,22 +135,33 @@ const Game = ({ gameData, onLeaveGame }) => {
           }
         }}
         disabled={!isYourTurn || gameStatus !== 'playing'}
+        winningLine={winningLine}
       />
 
       {(winner || opponentLeft) && (
-        <div style={{ marginTop: '20px' }}>
-          <button onClick={handlePlayAgain} disabled={opponentLeft}>
-            بازی مجدد
+        <div className="flex gap-3 mt-8">
+          <button 
+            onClick={handlePlayAgain} 
+            disabled={opponentLeft}
+            className="flex-1 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 disabled:opacity-50 text-white py-3 px-6 rounded-2xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+          >
+            🔄 بازی مجدد
           </button>
-          <button onClick={onLeaveGame} style={{ marginLeft: '10px' }}>
-            ترک بازی
+          <button 
+            onClick={onLeaveGame}
+            className="flex-1 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white py-3 px-6 rounded-2xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+          >
+            🚪 ترک بازی
           </button>
         </div>
       )}
 
       {gameStatus === 'waiting' && (
-        <button onClick={onLeaveGame} style={{ marginTop: '20px' }}>
-          لغو بازی
+        <button 
+          onClick={onLeaveGame}
+          className="w-full bg-gray-500 hover:bg-gray-600 text-white py-3 px-6 rounded-2xl font-semibold mt-6 shadow-lg hover:shadow-xl transition-all duration-300"
+        >
+          ❌ لغو بازی
         </button>
       )}
     </div>

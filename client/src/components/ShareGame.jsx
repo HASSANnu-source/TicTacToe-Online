@@ -10,8 +10,6 @@ const ShareGame = ({ gameId }) => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error('Failed to copy: ', err);
-      // Fallback for browsers that don't support clipboard API
       const textArea = document.createElement('textarea');
       textArea.value = gameLink;
       document.body.appendChild(textArea);
@@ -40,36 +38,26 @@ const ShareGame = ({ gameId }) => {
   };
 
   return (
-    <>
-          <button 
-            onClick={copyLink}
-            style={{
-              padding: '8px 16px',
-              backgroundColor: copied ? '#28a745' : '#007bff',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer'
-            }}
-          >
-            {copied ? 'کپی شد!' : 'کپی لینک'}
-          </button>
-          {navigator.share && (
-            <button 
-              onClick={shareLink}
-              style={{
-                padding: '8px 16px',
-                backgroundColor: '#6c757d',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer'
-              }}
-            >
-              اشتراک‌گذاری
-            </button>
-          )}
-    </>
+    <div className="flex gap-2">
+      <button 
+        onClick={copyLink}
+        className={`px-4 py-2 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5 ${
+          copied 
+            ? 'bg-green-500 text-white' 
+            : 'bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600'
+        }`}
+      >
+        {copied ? '✅ کپی شد' : '📋 کپی لینک'}
+      </button>
+      {navigator.share && (
+        <button 
+          onClick={shareLink}
+          className="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5"
+        >
+          📤 اشتراک‌گذاری
+        </button>
+      )}
+    </div>
   );
 };
 

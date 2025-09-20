@@ -1,14 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Vazirmatn&display=swap');
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 body {
   font-family: "Vazirmatn", sans-serif, Arial;
   color: white;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  background-color: #000;
 }
