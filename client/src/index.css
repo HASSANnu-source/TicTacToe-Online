@@ -2,9 +2,8 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
 
-body {
-  font-family: "Vazirmatn", sans-serif, Arial;
-  color: white;
-  margin: 0;
-  padding: 0;
+@layer base {
+  body {
+    font-family: "Vazirmatn" ,system-ui , Arial, sans-serif;
+  }
 }
