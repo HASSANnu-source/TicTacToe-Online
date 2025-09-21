@@ -9,7 +9,7 @@ const ShareGame = ({ gameId }) => {
       await navigator.clipboard.writeText(gameLink);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
+    } catch {
       const textArea = document.createElement('textarea');
       textArea.value = gameLink;
       document.body.appendChild(textArea);

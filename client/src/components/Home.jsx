@@ -53,12 +53,12 @@ const Home = ({ onGameCreated, onGameJoined }) => {
   return (
     <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl p-8 rounded-3xl shadow-2xl border border-white/20 dark:border-gray-700/30 w-full max-w-md">
       <h1 className="text-3xl font-bold text-center mb-8 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-        بازی Tic-Tac-Toe
+        بازی دوز
       </h1>
-      
+
       <div className="mb-8">
-        <button 
-          onClick={createGame} 
+        <button
+          onClick={createGame}
           disabled={loading}
           className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 disabled:opacity-50 text-white py-4 px-6 rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
         >
@@ -76,8 +76,8 @@ const Home = ({ onGameCreated, onGameJoined }) => {
           disabled={loading}
           className="w-full px-4 py-3 bg-white/50 dark:bg-gray-700/50 dark:text-gray-300 border border-gray-200 dark:border-gray-600 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-400 dark:placeholder-gray-500 transition-all duration-300"
         />
-        <button 
-          onClick={joinGame} 
+        <button
+          onClick={joinGame}
           disabled={loading}
           className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 disabled:opacity-50 text-white py-3 px-6 rounded-2xl font-medium shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5"
         >
